@@ -11,9 +11,7 @@
         </button>
     </div>
 
-    <button @click="getWeatherFiveDays" class="border p-2 m-8">Weather in 5 days</button> 
-
-    <button class="border m-3 p-3 rounded-lg bg-cyan-200" @click="getWeatherByCoords">Get weather by coordinates</button>
+  
     <div v-if="loading">
       <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -87,26 +85,7 @@ export default {
       }) 
     },
 
-    async getWeatherByCoords(){
-      try{
-        const responseCoords = await fetch (`http://api.openweathermap.org/geo/1.0/direct?q=${this.location}&limit=1&appid=${this.apiKey}`)
-        const dataCoords = await responseCoords.json()
-          if(dataCoords.length === 0){
-            throw new Error('City not found')
-          }
-        const responseWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${dataCoords[0].lat}&lon=${dataCoords[0].lon}&appid=${this.apiKey}&units=metric`);
-        const dataWeather = await responseWeather.json()
-        this.weather= dataWeather
-      }
-      catch(e){
-        this.error = e
-        console.log(e)
-      }
-      finally{
-        this.loading = false
-      }
-    },
-
+    
 //esto siguiente da el mismo resultado que lo anterior pero es mas lio, mas desordenado. con los awaits nos aseguramos que todo pase al mismo tiempo
     //getWeatherByCoords(){
       //fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${this.location}&limit=1&appid=${this.apiKey}`)
@@ -144,28 +123,7 @@ export default {
       } else {
         console.log('Geolocation is not supported by this browser')
       }
-    },
-
-    async getWeatherFiveDays(){
-    try {
-      const responseCoords = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${this.location}&appid=${this.apiKey}`)
-      const dataCoords = await responseCoords.json()
-      const responseWeatherFiveDays = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${dataCoords[0].lat}&lon=${dataCoords[0].lon}&appid=${this.apiKey}&cnt=40&units=metric`)
-      const dataWeatherFiveDays = await responseWeatherFiveDays.json()
-      this.weatherFiveDays = dataWeatherFiveDays
-      console.log(this.weatherFiveDays);
-     
-    }
-    catch(e){
-      this.error = e
-      console.log(e)
-    }
-    finally{
-      this.loading = false
-    }
-    
-
-    },    
+    },   
 
 
   },
